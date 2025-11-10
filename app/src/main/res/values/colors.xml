@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="black50">#80000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="lightCream">#fbfde4</color>
+    <color name="cream">#f5e2b7</color>
+    <color name="midBrown">#934a2f</color>
+    <color name="yellow">#fcde2a</color>
+    <color name="darkGreen">#0c7443</color>
+    <color name="lightGreen">#70c573</color>
+    <color name="someGreen">#109857</color>
+    <color name="darkGreen50">#800c7443</color>
+    <color name="terBlue">#0089ab</color>
+    <color name="darkBlue">#004aad</color>
+    <color name="darkBlue50">#80004aad</color>
+    <color name="lightOrenge">#ee9946</color>
+    <color name="darkBrown">#85472f</color>
+    <color name="darkBrown50">#808B4513</color>
+
+</resources>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/green_bg"
+    tools:context=".frag3">
+
+    <FrameLayout
+        android:id="@+id/flPanel3"
+        android:layout_width="330dp"
+        android:layout_height="330dp"
+        android:layout_marginTop="-50dp"
+        android:background="@drawable/panel1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivMascot3"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/masscott3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTilte3"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="Build Your EcoStreak!"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="23sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/ivMascot3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tvText3"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="“Consistency is key. Check off your climate actions every day to build your Streak Counter. Compete for the 'All-Time High Streak' [cite: 38]and become a certified Climate Hero!”"
+                android:textAlignment="center"
+                android:textSize="13sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivMascot3" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/ivPage3"
+        android:layout_width="130dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/panel1"
+        app:layout_constraintEnd_toEndOf="@+id/flPanel3"
+        app:layout_constraintStart_toStartOf="@+id/flPanel3"
+        app:layout_constraintTop_toBottomOf="@+id/flPanel3" />
+
+    <ImageView
+        android:id="@+id/ivPageLoading3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="2dp"
+        android:src="@drawable/page_loader"
+        app:layout_constraintBottom_toBottomOf="@+id/ivEarth3"
+        app:layout_constraintStart_toStartOf="@+id/ivPage3"
+        app:layout_constraintTop_toTopOf="@+id/ivEarth3" />
+
+    <ImageView
+        android:id="@+id/ivEarth3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/earth"
+        android:layout_marginLeft="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPage3"
+        app:layout_constraintStart_toStartOf="@+id/ivPage3"
+        app:layout_constraintTop_toTopOf="@+id/ivPage3" />
+
+    <Button
+        android:id="@+id/btnContinue3"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/midBrown"
+        android:fontFamily="@font/leckerli_one"
+
+        android:text="Continue"
+        android:textSize="22sp"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivPage3"
+        app:layout_constraintStart_toStartOf="@+id/ivPage3"
+        app:layout_constraintTop_toBottomOf="@+id/ivPage3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

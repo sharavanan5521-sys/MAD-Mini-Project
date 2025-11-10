@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/green_bg"
+    tools:context=".frag2">
+
+    <FrameLayout
+        android:id="@+id/flPanel2"
+        android:layout_width="330dp"
+        android:layout_height="330dp"
+        android:layout_marginTop="-50dp"
+        android:background="@drawable/panel1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivMascot2"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/masscott9"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTilte2"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="Learning for a Sustainable Malaysia"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="23sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/ivMascot2"
+                app:layout_constraintEnd_toEndOf="@+id/ivMascot2"
+                app:layout_constraintStart_toStartOf="@+id/ivMascot2" />
+
+            <TextView
+                android:id="@+id/tvText2"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:text="“We support Malaysia's commitment to the Sustainable Development Goals and Dasar Pendidikan Digital. Use your digital skills to learn about energy saving, responsible transport, and more!”"
+                android:textAlignment="center"
+                android:textSize="13sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivMascot2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/ivPage2"
+        android:layout_width="130dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/panel1"
+        app:layout_constraintEnd_toEndOf="@+id/flPanel2"
+        app:layout_constraintStart_toStartOf="@+id/flPanel2"
+        app:layout_constraintTop_toBottomOf="@+id/flPanel2" />
+
+    <ImageView
+        android:id="@+id/ivPageLoading2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="2dp"
+        android:src="@drawable/page_loader"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPage2"
+        app:layout_constraintStart_toStartOf="@+id/ivPage2"
+        app:layout_constraintTop_toTopOf="@+id/ivPage2" />
+
+    <ImageView
+        android:id="@+id/ivEarth2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="2dp"
+        android:src="@drawable/earth"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPage2"
+        app:layout_constraintStart_toStartOf="@+id/ivPage2"
+        app:layout_constraintTop_toTopOf="@+id/ivPage2" />
+
+    <Button
+        android:id="@+id/btnContinue2"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/midBrown"
+        android:fontFamily="@font/leckerli_one"
+        android:text="Continue"
+        android:textSize="22sp"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivPage2"
+        app:layout_constraintStart_toStartOf="@+id/ivPage2"
+        app:layout_constraintTop_toBottomOf="@+id/ivPage2" />
+
+    <TextView
+        android:id="@+id/tvSkip2"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/leckerli_one"
+        android:text="Skip"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="@+id/btnContinue2"
+        app:layout_constraintStart_toStartOf="@+id/btnContinue2"
+        app:layout_constraintTop_toBottomOf="@+id/btnContinue2" />
+</androidx.constraintlayout.widget.ConstraintLayout>

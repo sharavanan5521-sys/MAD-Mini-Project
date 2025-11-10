@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/green_bg"
+    tools:context=".frag1">
+
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/leckerli_one"
+        android:text="Welcome!"
+        android:textColor="@color/white"
+        android:textSize="70sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/flPanel"
+        android:layout_width="330dp"
+        android:layout_height="330dp"
+        android:layout_marginTop="-50dp"
+        android:background="@drawable/panel1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivMascot"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/masscott1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTilte"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="You are the Climate
+                Action Hero!"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="23sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/ivMascot"
+                app:layout_constraintEnd_toEndOf="@+id/ivMascot"
+                app:layout_constraintStart_toStartOf="@+id/ivMascot" />
+
+            <TextView
+                android:id="@+id/tvText"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="“Welcome to EcoStreak, your daily guide to a greener lifestyle. Every small choice you make can help protect our planet.”"
+                android:textAlignment="center"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/ivMascot"
+                app:layout_constraintStart_toStartOf="@+id/ivMascot"
+                app:layout_constraintTop_toBottomOf="@+id/ivMascot" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/ivPage"
+        android:layout_width="130dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/panel1"
+        app:layout_constraintEnd_toEndOf="@+id/flPanel"
+        app:layout_constraintStart_toStartOf="@+id/flPanel"
+        app:layout_constraintTop_toBottomOf="@+id/flPanel" />
+
+    <ImageView
+        android:id="@+id/ivPageLoading"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/page_loader"
+        app:layout_constraintBottom_toBottomOf="@+id/ivEarth"
+        app:layout_constraintEnd_toEndOf="@id/ivEarth"
+        app:layout_constraintStart_toStartOf="@+id/ivEarth"
+        app:layout_constraintTop_toTopOf="@id/ivEarth" />
+
+    <ImageView
+        android:id="@+id/ivEarth"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="2dp"
+        android:src="@drawable/earth"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPage"
+        app:layout_constraintStart_toStartOf="@+id/ivPage"
+        app:layout_constraintTop_toTopOf="@+id/ivPage" />
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/midBrown"
+        android:fontFamily="@font/leckerli_one"
+        android:text="Continue"
+        android:textSize="22sp"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivPage"
+        app:layout_constraintStart_toStartOf="@+id/ivPage"
+        app:layout_constraintTop_toBottomOf="@+id/ivPage" />
+
+    <TextView
+        android:id="@+id/tvSkip"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/leckerli_one"
+        android:text="Skip"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="@+id/btnContinue"
+        app:layout_constraintStart_toStartOf="@+id/btnContinue"
+        app:layout_constraintTop_toBottomOf="@+id/btnContinue" />
+</androidx.constraintlayout.widget.ConstraintLayout>
