@@ -3,12 +3,15 @@ package com.example.mad_mini_project1;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.media.MediaPlayer; // 1. Import MediaPlayer
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +21,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.view.ViewGroup;
 
 public class frag2 extends Fragment {
 
-    // Declare MediaPlayer as a member variable
     private MediaPlayer popSoundPlayer;
+    private Handler handler;
+    private Runnable goNextRunnable;
 
-    // Define the start and end targets for this segment of the animation
+    // progress animation targets
     private static final int START_WIDTH_DP = 1;
     private static final int END_WIDTH_DP = 63;
 
@@ -33,15 +36,11 @@ public class frag2 extends Fragment {
         // Required empty public constructor
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frag2, container, false);
-
-        // 2. Initialize the MediaPlayer when the view is created
-        if (getActivity() != null) {
-            popSoundPlayer = MediaPlayer.create(getActivity(), R.raw.pop_sound);
-        }
 
         Button btnContinue = view.findViewById(R.id.btnContinue2);
         TextView tvSkip = view.findViewById(R.id.tvSkip2);
@@ -49,126 +48,133 @@ public class frag2 extends Fragment {
         ImageView ivEarth = view.findViewById(R.id.ivEarth2);
         FrameLayout flPanel2 = view.findViewById(R.id.flPanel2);
 
-        Animation slideInLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_from_left);
-        Animation slideToRight = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_right);
-        Animation scaleDown = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_down);
+        handler = new Handler(Looper.getMainLooper());
 
+        // sound
+        if (getActivity() != null) {
+            popSoundPlayer = MediaPlayer.create(getActivity(), R.raw.pop_sound);
+        }
+
+        // animations (safe)
+        Animation slideInLeft = null;
+        Animation slideToRight = null;
+        Animation scaleDown = null;
+        if (getContext() != null) {
+            slideInLeft = AnimationUtils.loadAnimation(getContext(), R.anim.slide_from_left);
+            slideToRight = AnimationUtils.loadAnimation(getContext(), R.anim.slide_to_right);
+            scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
+        }
+
+        if (slideInLeft != null) {
+            flPanel2.startAnimation(slideInLeft);
+        }
+
+        // underline skip
         tvSkip.setPaintFlags(tvSkip.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        flPanel2.startAnimation(slideInLeft);
 
+        Animation finalSlideToRight = slideToRight;
+        Animation finalScaleDown = scaleDown;
 
         btnContinue.setOnClickListener(v -> {
-            // 3. Play the sound effect first
+            // play sound
             if (popSoundPlayer != null) {
                 popSoundPlayer.seekTo(0);
                 popSoundPlayer.start();
             }
 
             v.setEnabled(false);
-            btnContinue.startAnimation(scaleDown);
-            flPanel2.startAnimation(slideToRight);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (getActivity() instanceof MainActivity) {
-                        ((MainActivity) getActivity()).goToNextFragment();
-                    }
+
+            if (finalScaleDown != null) {
+                v.startAnimation(finalScaleDown);
+            }
+            if (finalSlideToRight != null) {
+                flPanel2.startAnimation(finalSlideToRight);
+            }
+
+            // delayed navigation
+            goNextRunnable = () -> {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).goToNextFragment();
                 }
-            }, 1000); // Delay time in milliseconds (1000ms = 1 second)
+            };
+            handler.postDelayed(goNextRunnable, 1000);
         });
+
         tvSkip.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), Login.class);
-            startActivity(intent);
             if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), Login.class);
+                startActivity(intent);
                 getActivity().finish();
             }
         });
 
-        // --- Animation Logic Updated for Half Width and Tracker ---
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                // Animate the width (ivPageLoading) and position (ivEarth) from start to 63dp
-                animateProgress(ivPageLoading, ivEarth, START_WIDTH_DP, END_WIDTH_DP);
-            }
-        });
-        // --- Animation Logic Ends Here ---
+        // start your progress animation after layout is ready
+        view.post(() -> animateProgress(ivPageLoading, ivEarth, START_WIDTH_DP, END_WIDTH_DP));
 
         return view;
     }
 
-    // 4. Important: Release the MediaPlayer resources when the Fragment is destroyed
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        // stop pending navigation
+        if (handler != null && goNextRunnable != null) {
+            handler.removeCallbacks(goNextRunnable);
+        }
+
+        // release media
         if (popSoundPlayer != null) {
             popSoundPlayer.release();
-            popSoundPlayer = null; // Set to null for safety
+            popSoundPlayer = null;
         }
     }
 
-    /**
-     * Helper method to convert density-independent pixels (dp) to pixels (px).
-     * LayoutParams require pixel values.
-     */
     private int dpToPx(int dp) {
         if (getContext() == null) return 0;
         return Math.round(dp * getContext().getResources().getDisplayMetrics().density);
     }
 
-    /**
-     * Animates the ImageView's true layout width and a tracker's position simultaneously.
-     * The tracker (ivEarth) starts flush (TranslationX=0) and ends centered on the bar's right edge.
-     */
-    private void animateProgress(final ImageView progressBar, final ImageView tracker, final int startWidthDp, final int endWidthDp) {
+    private void animateProgress(final ImageView progressBar,
+                                 final ImageView tracker,
+                                 final int startWidthDp,
+                                 final int endWidthDp) {
+
+        if (getContext() == null) return;
 
         final int startWidthPx = dpToPx(startWidthDp);
         final int endWidthPx = dpToPx(endWidthDp);
-
         final int trackerWidth = tracker.getWidth();
 
-        // --- PROPORTIONAL TRACKER MOVEMENT CALCULATION ---
-        // Range for the width animator (denominator for progress calculation)
-        final float widthRange = (float)(endWidthPx - startWidthPx);
-
-        // Target TranslationX: Center of tracker aligns with the end of the bar
+        final float widthRange = (float) (endWidthPx - startWidthPx);
         final float endTranslationPx = endWidthPx - (trackerWidth / 2f);
 
-        // 1. Ensure the progress bar starts at the correct position
+        // set initial width
         ViewGroup.LayoutParams layoutParams = progressBar.getLayoutParams();
         layoutParams.width = startWidthPx;
         progressBar.setLayoutParams(layoutParams);
 
-        // 2. Set initial state: "starts to starts" alignment means TranslationX is 0.
-        // This prevents the visual jump/teleport.
+        // tracker starts at 0
         tracker.setTranslationX(0);
 
-        // Create the ValueAnimator for the BAR WIDTH
         ValueAnimator widthAnimator = ValueAnimator.ofInt(startWidthPx, endWidthPx);
-        widthAnimator.setDuration(1000); // 1 second duration
+        widthAnimator.setDuration(1000);
 
-        // Add the update listener to modify LayoutParams and TranslationX
-        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                int animatedValue = (int) animator.getAnimatedValue();
+        widthAnimator.addUpdateListener(animator -> {
+            int animatedValue = (int) animator.getAnimatedValue();
 
-                // A. Update the progress bar width (Layout change)
-                ViewGroup.LayoutParams layoutParams = progressBar.getLayoutParams();
-                layoutParams.width = animatedValue;
-                progressBar.setLayoutParams(layoutParams);
+            // update bar width
+            ViewGroup.LayoutParams lp = progressBar.getLayoutParams();
+            lp.width = animatedValue;
+            progressBar.setLayoutParams(lp);
 
-                // B. Update the tracker position (Visual translation)
-                if (widthRange > 0) {
-                    // 1. Calculate animation progress (0.0 to 1.0)
-                    float progress = (animatedValue - startWidthPx) / widthRange;
-
-                    // 2. Calculate current TranslationX: Move proportionally from 0 to endTranslationPx
-                    float currentTranslation = progress * endTranslationPx;
-                    tracker.setTranslationX(currentTranslation);
-                } else {
-                    tracker.setTranslationX(endTranslationPx);
-                }
+            // update tracker position
+            if (widthRange > 0) {
+                float progress = (animatedValue - startWidthPx) / widthRange;
+                float currentTranslation = progress * endTranslationPx;
+                tracker.setTranslationX(currentTranslation);
+            } else {
+                tracker.setTranslationX(endTranslationPx);
             }
         });
 

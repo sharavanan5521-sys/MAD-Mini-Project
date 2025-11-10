@@ -34,7 +34,7 @@
         app:srcCompat="@drawable/circle_black" />
 
     <TextView
-        android:id="@+id/textView49"
+        android:id="@+id/tvTotalScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="9/9"
@@ -56,7 +56,7 @@
         app:srcCompat="@drawable/circle_orange" />
 
     <TextView
-        android:id="@+id/textView50"
+        android:id="@+id/tvMod1Score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3/3"
@@ -78,7 +78,7 @@
         app:srcCompat="@drawable/circle_blue" />
 
     <TextView
-        android:id="@+id/textView51"
+        android:id="@+id/tvMod3Score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3/3"
@@ -100,7 +100,7 @@
         app:srcCompat="@drawable/circle_green" />
 
     <TextView
-        android:id="@+id/textView52"
+        android:id="@+id/tvMod2Score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3/3"

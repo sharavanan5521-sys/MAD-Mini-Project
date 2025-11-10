@@ -2,35 +2,44 @@ package com.example.mad_mini_project1;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class Register extends AppCompatActivity {
+
+    private EditText etName, etEmail, etPassword;
+    private Button btnSignup;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_register);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        Animation scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
+        setContentView(R.layout.activity_register); // make sure this layout exists
 
-        Button btnSignUp = findViewById(R.id.btnSignup);
-        btnSignUp.setOnClickListener(v -> {
-            v.startAnimation(scaleDown);
-            Intent intent = new Intent(Register.this, Home.class);
-            startActivity(intent);
+        session = new SessionManager(this);
+
+        etName = findViewById(R.id.etName);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnSignup = findViewById(R.id.btnSignup);
+
+        btnSignup.setOnClickListener(v -> {
+            String name = etName.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String pass = etPassword.getText().toString().trim();
+
+            if (name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            session.saveUser(name, email, pass);
+            Toast.makeText(this, "Registered. Please login.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Register.this, Login.class));
+            finish();
         });
     }
 }

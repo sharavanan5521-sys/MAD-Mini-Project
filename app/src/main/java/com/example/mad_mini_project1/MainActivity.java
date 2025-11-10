@@ -21,30 +21,50 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        loadFragment(new frag1());
+        // Adjust for system bars
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
+
+        // Load the first onboarding fragment
+        loadFragment(new frag1(), false);
     }
 
     public void goToNextFragment() {
         Fragment nextFragment;
 
         if (currentFragment == 1) {
-            nextFragment = new frag2(); // your second onboarding screen
+            nextFragment = new frag2();
             currentFragment = 2;
         } else if (currentFragment == 2) {
-            nextFragment = new frag3(); // your third onboarding screen
+            nextFragment = new frag3();
             currentFragment = 3;
         } else {
-            // after fragment 3, go to WelcomeActivity
             startActivity(new Intent(this, Login.class));
+            overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
             finish();
             return;
         }
 
-        loadFragment(nextFragment);
+        loadFragment(nextFragment, true);
     }
 
-    private void loadFragment(Fragment fragment) {
+    private void loadFragment(Fragment fragment, boolean animate) {
+        if (findViewById(R.id.fragmentContainerView) == null) return;
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (animate) {
+            transaction.setCustomAnimations(
+                    R.anim.slide_to_right,
+                    R.anim.slide_from_left,
+                    R.anim.slide_from_left,
+                    R.anim.slide_to_right
+            );
+        }
+
         transaction.replace(R.id.fragmentContainerView, fragment);
         transaction.commit();
     }

@@ -3,29 +3,31 @@ package com.example.mad_mini_project1;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.media.MediaPlayer; // 1. Import MediaPlayer
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewGroup;   // needed for LayoutParams
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
-// Note: android.view.ViewGroup is imported twice in the original, I'll remove one.
 
 public class frag3 extends Fragment {
 
-    // Declare MediaPlayer as a member variable
     private MediaPlayer popSoundPlayer;
+    private Handler handler;
+    private Runnable goNextRunnable;
 
-    // Define the start and end targets for this segment of the animation
+    // this fragment animates from half bar (63dp) to full (125dp)
     private static final int START_WIDTH_DP = 63;
     private static final int END_WIDTH_DP = 125;
 
@@ -33,123 +35,130 @@ public class frag3 extends Fragment {
         // Required empty public constructor
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_frag3, container, false);
 
-        // 2. Initialize the MediaPlayer when the view is created
+        Button btnContinue = view.findViewById(R.id.btnContinue3);
+        FrameLayout flPanel3 = view.findViewById(R.id.flPanel3);
+        ImageView ivPageLoading = view.findViewById(R.id.ivPageLoading3);
+        ImageView ivEarth = view.findViewById(R.id.ivEarth3);
+
+        handler = new Handler(Looper.getMainLooper());
+
+        // sound
         if (getActivity() != null) {
             popSoundPlayer = MediaPlayer.create(getActivity(), R.raw.pop_sound);
         }
 
-        Button btnContinue = view.findViewById(R.id.btnContinue3);
-        FrameLayout flPanel3 = view.findViewById(R.id.flPanel3);
+        // animations, but safe
+        Animation slideInLeft = null;
+        Animation slideToRight = null;
+        Animation scaleDown = null;
+        if (getContext() != null) {
+            slideInLeft = AnimationUtils.loadAnimation(getContext(), R.anim.slide_from_left);
+            slideToRight = AnimationUtils.loadAnimation(getContext(), R.anim.slide_to_right);
+            scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
+        }
 
-        Animation slideInLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_from_left);
-        Animation slideToRight = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_right);
-        Animation scaleDown = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_down);
+        if (slideInLeft != null) {
+            flPanel3.startAnimation(slideInLeft);
+        }
 
-        flPanel3.startAnimation(slideInLeft);
-
-        // Assuming the ImageView ID follows the pattern
-        ImageView ivPageLoading = view.findViewById(R.id.ivPageLoading3);
-        // Find the new ImageView for the tracker
-        ImageView ivEarth = view.findViewById(R.id.ivEarth3);
+        final Animation finalScaleDown = scaleDown;
+        final Animation finalSlideToRight = slideToRight;
 
         btnContinue.setOnClickListener(v -> {
-            // 3. Play the sound effect first
+            // play sound
             if (popSoundPlayer != null) {
                 popSoundPlayer.seekTo(0);
                 popSoundPlayer.start();
             }
 
             v.setEnabled(false);
-            btnContinue.startAnimation(scaleDown);
-            flPanel3.startAnimation(slideToRight);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (getActivity() instanceof MainActivity) {
-                        ((MainActivity) getActivity()).goToNextFragment();
-                    }
+
+            if (finalScaleDown != null) {
+                v.startAnimation(finalScaleDown);
+            }
+            if (finalSlideToRight != null) {
+                flPanel3.startAnimation(finalSlideToRight);
+            }
+
+            // delayed nav to next onboarding (which is your Login)
+            goNextRunnable = () -> {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).goToNextFragment();
+                } else if (getActivity() != null) {
+                    // fallback: go to Login if somehow not in MainActivity
+                    startActivity(new Intent(getActivity(), Login.class));
+                    getActivity().finish();
                 }
-            }, 1000); // Delay time in milliseconds (1000ms = 1 second)
+            };
+            handler.postDelayed(goNextRunnable, 1000);
         });
 
-        // --- Animation Logic for Frag 3 (Second Half) ---
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                // Animate the width and position from 63dp (halfway) to 125dp (full width)
-                animateProgress(ivPageLoading, ivEarth, START_WIDTH_DP, END_WIDTH_DP);
-            }
-        });
-        // --- Animation Logic Ends Here ---
+        // run the progress animation after layout is ready
+        view.post(() -> animateProgress(ivPageLoading, ivEarth, START_WIDTH_DP, END_WIDTH_DP));
 
         return view;
     }
 
-    // 4. Important: Release the MediaPlayer resources when the Fragment is destroyed
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        // stop pending navigation if user leaves early
+        if (handler != null && goNextRunnable != null) {
+            handler.removeCallbacks(goNextRunnable);
+        }
+
         if (popSoundPlayer != null) {
             popSoundPlayer.release();
-            popSoundPlayer = null; // Set to null for safety
+            popSoundPlayer = null;
         }
     }
 
-    /**
-     * Helper method to convert density-independent pixels (dp) to pixels (px).
-     * LayoutParams require pixel values.
-     */
     private int dpToPx(int dp) {
         if (getContext() == null) return 0;
         return Math.round(dp * getContext().getResources().getDisplayMetrics().density);
     }
 
-    /**
-     * Animates the ImageView's true layout width and a tracker's position simultaneously.
-     */
-    private void animateProgress(final ImageView progressBar, final ImageView tracker, final int startWidthDp, final int endWidthDp) {
-        // Convert DP values to pixels
+    private void animateProgress(final ImageView progressBar,
+                                 final ImageView tracker,
+                                 final int startWidthDp,
+                                 final int endWidthDp) {
+
+        if (getContext() == null) return;
+
         final int startWidthPx = dpToPx(startWidthDp);
         final int endWidthPx = dpToPx(endWidthDp);
-
-        // Get the actual width of the tracker image (ivEarth) in pixels.
         final int trackerWidth = tracker.getWidth();
 
-        // Ensure the progress bar starts at the correct position (63dp)
-        ViewGroup.LayoutParams layoutParams = progressBar.getLayoutParams();
-        layoutParams.width = startWidthPx;
-        progressBar.setLayoutParams(layoutParams);
+        // set initial bar width
+        ViewGroup.LayoutParams lp = progressBar.getLayoutParams();
+        lp.width = startWidthPx;
+        progressBar.setLayoutParams(lp);
 
-        // Ensure the tracker starts at the correct position (63dp).
-        // To align the right edge of the tracker with the starting width (startWidthPx),
-        // we subtract the tracker's full width.
+        // tracker should start aligned to current width (right edge)
         tracker.setTranslationX(startWidthPx - trackerWidth);
 
-        // Create the ValueAnimator
         ValueAnimator widthAnimator = ValueAnimator.ofInt(startWidthPx, endWidthPx);
-        widthAnimator.setDuration(1000); // 1 second duration
+        widthAnimator.setDuration(1000);
 
-        // Add the update listener to modify LayoutParams and TranslationX
-        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                // Get the animated integer value
-                int animatedValue = (int) animator.getAnimatedValue();
+        widthAnimator.addUpdateListener(animator -> {
+            int animatedValue = (int) animator.getAnimatedValue();
 
-                // 1. Update the progress bar width (Layout change)
-                ViewGroup.LayoutParams layoutParams = progressBar.getLayoutParams();
-                layoutParams.width = animatedValue;
-                progressBar.setLayoutParams(layoutParams);
+            // resize bar
+            ViewGroup.LayoutParams p = progressBar.getLayoutParams();
+            p.width = animatedValue;
+            progressBar.setLayoutParams(p);
 
-                // 2. Update the tracker position (Visual translation)
-                // We subtract the full tracker width from the animated width to align their right edges.
-                tracker.setTranslationX(animatedValue - trackerWidth);
-            }
+            // move tracker along with bar
+            tracker.setTranslationX(animatedValue - trackerWidth);
         });
 
         widthAnimator.start();

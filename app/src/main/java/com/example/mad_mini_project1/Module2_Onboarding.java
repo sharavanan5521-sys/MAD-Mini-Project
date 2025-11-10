@@ -21,47 +21,75 @@ public class Module2_Onboarding extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_module2_onboarding);
 
-        loadFragment(new Module2_frag1());
-        }
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
-    public void goToNextFragment(){
+        // load first fragment without animation
+        loadFragment(new Module2_frag1(), false);
+    }
+
+    public void goToNextFragment() {
         Fragment nextFragment;
 
-        if(currentFragment == 1){
+        if (currentFragment == 1) {
             nextFragment = new Module2_frag2();
             currentFragment = 2;
-        } else if(currentFragment == 2){
+        } else if (currentFragment == 2) {
             nextFragment = new Module2_frag3();
             currentFragment = 3;
         } else {
             startActivity(new Intent(this, Learn.class));
+            overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             finish();
             return;
         }
 
-        loadFragment(nextFragment);
+        loadFragment(nextFragment, true);
     }
 
-    public void goToPreviousFragment(){
+    public void goToPreviousFragment() {
         Fragment previousFragment;
 
-        if(currentFragment == 2) {
+        if (currentFragment == 2) {
             previousFragment = new Module2_frag1();
             currentFragment = 1;
-        } else if(currentFragment == 3){
+        } else if (currentFragment == 3) {
             previousFragment = new Module2_frag2();
             currentFragment = 2;
         } else {
             startActivity(new Intent(this, Learn.class));
+            overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
             finish();
             return;
         }
 
-        loadFragment(previousFragment);
+        loadFragment(previousFragment, false);
     }
-        private void loadFragment(Fragment fragment) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_container, fragment);
-            transaction.commit();
+
+    private void loadFragment(Fragment fragment, boolean isForward) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // forward = new fragment comes in from right, old one goes out to left
+        if (isForward) {
+            transaction.setCustomAnimations(
+                    R.anim.slide_from_left,  // enter animation
+                    R.anim.slide_to_right,   // exit animation
+                    R.anim.slide_to_right,   // pop enter
+                    R.anim.slide_from_left   // pop exit
+            );
+        } else {
+            transaction.setCustomAnimations(
+                    R.anim.slide_to_right,
+                    R.anim.slide_from_left,
+                    R.anim.slide_from_left,
+                    R.anim.slide_to_right
+            );
+        }
+
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.commit();
     }
 }
