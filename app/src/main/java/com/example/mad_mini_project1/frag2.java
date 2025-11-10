@@ -3,6 +3,7 @@ package com.example.mad_mini_project1;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.media.MediaPlayer; // 1. Import MediaPlayer
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,9 @@ import android.view.ViewGroup;
 
 public class frag2 extends Fragment {
 
+    // Declare MediaPlayer as a member variable
+    private MediaPlayer popSoundPlayer;
+
     // Define the start and end targets for this segment of the animation
     private static final int START_WIDTH_DP = 1;
     private static final int END_WIDTH_DP = 63;
@@ -33,6 +37,11 @@ public class frag2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frag2, container, false);
+
+        // 2. Initialize the MediaPlayer when the view is created
+        if (getActivity() != null) {
+            popSoundPlayer = MediaPlayer.create(getActivity(), R.raw.pop_sound);
+        }
 
         Button btnContinue = view.findViewById(R.id.btnContinue2);
         TextView tvSkip = view.findViewById(R.id.tvSkip2);
@@ -49,6 +58,12 @@ public class frag2 extends Fragment {
 
 
         btnContinue.setOnClickListener(v -> {
+            // 3. Play the sound effect first
+            if (popSoundPlayer != null) {
+                popSoundPlayer.seekTo(0);
+                popSoundPlayer.start();
+            }
+
             v.setEnabled(false);
             btnContinue.startAnimation(scaleDown);
             flPanel2.startAnimation(slideToRight);
@@ -59,7 +74,7 @@ public class frag2 extends Fragment {
                         ((MainActivity) getActivity()).goToNextFragment();
                     }
                 }
-            }, 1000); // Delay time in milliseconds (500ms = 0.5 seconds)
+            }, 1000); // Delay time in milliseconds (1000ms = 1 second)
         });
         tvSkip.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), Login.class);
@@ -80,6 +95,16 @@ public class frag2 extends Fragment {
         // --- Animation Logic Ends Here ---
 
         return view;
+    }
+
+    // 4. Important: Release the MediaPlayer resources when the Fragment is destroyed
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (popSoundPlayer != null) {
+            popSoundPlayer.release();
+            popSoundPlayer = null; // Set to null for safety
+        }
     }
 
     /**

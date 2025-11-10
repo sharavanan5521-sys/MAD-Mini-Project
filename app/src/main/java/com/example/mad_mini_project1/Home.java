@@ -2,6 +2,7 @@ package com.example.mad_mini_project1;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaPlayer; // Import MediaPlayer
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,8 @@ public class Home extends AppCompatActivity {
 
     FrameLayout flLearn, flScore;
     Animation scaleUp, scaleDown;
+    private MediaPlayer backgroundSoundPlayer; // For reveal.mp3 (activity start)
+    private MediaPlayer clickSoundPlayer;      // For sound_pop (button clicks)
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -32,6 +35,9 @@ public class Home extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // 2. Initialize the 'pop' sound player
+        clickSoundPlayer = MediaPlayer.create(this, R.raw.pop_sound);
 
         flLearn = findViewById(R.id.flLearn);
         flScore = findViewById(R.id.flScore);
@@ -64,13 +70,39 @@ public class Home extends AppCompatActivity {
 
 
         flLearn.setOnClickListener(v -> {
+            // Play click sound
+            playClickSound();
             Intent intent = new Intent(Home.this, Learn.class);
             startActivity(intent);
         });
 
         flScore.setOnClickListener(v -> {
+            // Play click sound
+            playClickSound();
             Intent intent = new Intent(Home.this, All_Score.class);
             startActivity(intent);
         });
+    }
+
+    // Helper method to play the click sound
+    private void playClickSound() {
+        if (clickSoundPlayer != null) {
+            clickSoundPlayer.seekTo(0);
+            clickSoundPlayer.start();
+        }
+    }
+
+    // Crucial: Release all MediaPlayer resources when the Activity is destroyed
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (backgroundSoundPlayer != null) {
+            backgroundSoundPlayer.release();
+            backgroundSoundPlayer = null;
+        }
+        if (clickSoundPlayer != null) {
+            clickSoundPlayer.release();
+            clickSoundPlayer = null;
+        }
     }
 }

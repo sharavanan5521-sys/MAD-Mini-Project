@@ -3,6 +3,7 @@ package com.example.mad_mini_project1;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.media.MediaPlayer; // 1. Import MediaPlayer
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,9 +18,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.view.ViewGroup;
+// Note: android.view.ViewGroup is imported twice in the original, I'll remove one.
 
 public class frag3 extends Fragment {
+
+    // Declare MediaPlayer as a member variable
+    private MediaPlayer popSoundPlayer;
 
     // Define the start and end targets for this segment of the animation
     private static final int START_WIDTH_DP = 63;
@@ -33,6 +37,11 @@ public class frag3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frag3, container, false);
+
+        // 2. Initialize the MediaPlayer when the view is created
+        if (getActivity() != null) {
+            popSoundPlayer = MediaPlayer.create(getActivity(), R.raw.pop_sound);
+        }
 
         Button btnContinue = view.findViewById(R.id.btnContinue3);
         FrameLayout flPanel3 = view.findViewById(R.id.flPanel3);
@@ -49,6 +58,12 @@ public class frag3 extends Fragment {
         ImageView ivEarth = view.findViewById(R.id.ivEarth3);
 
         btnContinue.setOnClickListener(v -> {
+            // 3. Play the sound effect first
+            if (popSoundPlayer != null) {
+                popSoundPlayer.seekTo(0);
+                popSoundPlayer.start();
+            }
+
             v.setEnabled(false);
             btnContinue.startAnimation(scaleDown);
             flPanel3.startAnimation(slideToRight);
@@ -59,7 +74,7 @@ public class frag3 extends Fragment {
                         ((MainActivity) getActivity()).goToNextFragment();
                     }
                 }
-            }, 1000); // Delay time in milliseconds (500ms = 0.5 seconds)
+            }, 1000); // Delay time in milliseconds (1000ms = 1 second)
         });
 
         // --- Animation Logic for Frag 3 (Second Half) ---
@@ -73,7 +88,16 @@ public class frag3 extends Fragment {
         // --- Animation Logic Ends Here ---
 
         return view;
+    }
 
+    // 4. Important: Release the MediaPlayer resources when the Fragment is destroyed
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (popSoundPlayer != null) {
+            popSoundPlayer.release();
+            popSoundPlayer = null; // Set to null for safety
+        }
     }
 
     /**
@@ -94,7 +118,6 @@ public class frag3 extends Fragment {
         final int endWidthPx = dpToPx(endWidthDp);
 
         // Get the actual width of the tracker image (ivEarth) in pixels.
-        // This is needed to calculate the precise translation required to align its right edge.
         final int trackerWidth = tracker.getWidth();
 
         // Ensure the progress bar starts at the correct position (63dp)

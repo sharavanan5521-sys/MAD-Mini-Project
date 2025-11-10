@@ -2,6 +2,7 @@ package com.example.mad_mini_project1;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaPlayer; // 1. Import MediaPlayer
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,7 @@ public class Learn extends AppCompatActivity {
 
     FrameLayout Module1, Module2, Module3;
     Animation scaleUp, scaleDown;
+    private MediaPlayer bloobSoundPlayer; // 2. Declare MediaPlayer for the click sound
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -32,6 +34,9 @@ public class Learn extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // 3. Initialize the 'bloob' sound player
+        bloobSoundPlayer = MediaPlayer.create(this, R.raw.bloob_sound);
 
         scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
@@ -66,19 +71,45 @@ public class Learn extends AppCompatActivity {
         Module3.setOnTouchListener(touchListener);
 
         Module1.setOnClickListener(v -> {
+            // Play sound and navigate
+            playBloobSound();
             Intent intent = new Intent(Learn.this, Module1_Onboarding.class);
             startActivity(intent);
         });
 
         Module2.setOnClickListener(v -> {
+            // Play sound and navigate
+            playBloobSound();
             Intent intent = new Intent(Learn.this, Module2_Onboarding.class);
             startActivity(intent);
         });
 
         Module3.setOnClickListener(v -> {
+            // Play sound and navigate
+            playBloobSound();
             Intent intent = new Intent(Learn.this, Module3_Onboarding.class);
             startActivity(intent);
         });
+    }
 
+    /**
+     * Helper method to play the bloob sound.
+     * Uses seekTo(0) to ensure the sound plays from the start even if clicked rapidly.
+     */
+    private void playBloobSound() {
+        if (bloobSoundPlayer != null) {
+            bloobSoundPlayer.seekTo(0);
+            bloobSoundPlayer.start();
+        }
+    }
+
+    // 4. Crucial: Release the MediaPlayer resources when the Activity is destroyed
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bloobSoundPlayer != null) {
+            bloobSoundPlayer.release();
+            bloobSoundPlayer = null;
+        }
     }
 }
