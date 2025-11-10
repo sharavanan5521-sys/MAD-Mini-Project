@@ -2,6 +2,7 @@ package com.example.mad_mini_project1;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,9 @@ public class Home extends AppCompatActivity {
     private SessionManager session;
     private TextView tvWelcome;
 
+    private MediaPlayer backgroundSoundPlayer;
+    private MediaPlayer clickSoundPlayer;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,8 @@ public class Home extends AppCompatActivity {
         });
 
         session = new SessionManager(this);
+
+        clickSoundPlayer = MediaPlayer.create(this, R.raw.pop_sound);
 
         flLearn = findViewById(R.id.flLearn);
         flScore = findViewById(R.id.flScore);
@@ -67,13 +73,35 @@ public class Home extends AppCompatActivity {
         flScore.setOnTouchListener(touchListener);
 
         flLearn.setOnClickListener(v -> {
+            playClickSound();
             Intent intent = new Intent(Home.this, Learn.class);
             startActivity(intent);
         });
 
         flScore.setOnClickListener(v -> {
+            playClickSound();
             Intent intent = new Intent(Home.this, All_Score.class); // your score activity
             startActivity(intent);
         });
+    }
+    private void playClickSound() {
+        if (clickSoundPlayer != null) {
+            clickSoundPlayer.seekTo(0);
+            clickSoundPlayer.start();
+        }
+    }
+
+    // Crucial: Release all MediaPlayer resources when the Activity is destroyed
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (backgroundSoundPlayer != null) {
+            backgroundSoundPlayer.release();
+            backgroundSoundPlayer = null;
+        }
+        if (clickSoundPlayer != null) {
+            clickSoundPlayer.release();
+            clickSoundPlayer = null;
+        }
     }
 }

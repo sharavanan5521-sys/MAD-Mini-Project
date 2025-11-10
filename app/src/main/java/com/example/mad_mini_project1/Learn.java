@@ -71,19 +71,19 @@ public class Learn extends AppCompatActivity {
         module1.setOnClickListener(v -> {
             playBloobSound();
             startActivity(new Intent(Learn.this, Module1_Onboarding.class));
-            overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+            overridePendingTransition(R.anim.frag_slide_in, R.anim.frag_slide_out);
         });
 
         module2.setOnClickListener(v -> {
             playBloobSound();
             startActivity(new Intent(Learn.this, Module2_Onboarding.class));
-            overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+            overridePendingTransition(R.anim.frag_slide_in, R.anim.frag_slide_out);
         });
 
         module3.setOnClickListener(v -> {
             playBloobSound();
             startActivity(new Intent(Learn.this, Module3_Onboarding.class));
-            overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+            overridePendingTransition(R.anim.frag_slide_in, R.anim.frag_slide_out);
         });
     }
 

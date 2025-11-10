@@ -68,17 +68,17 @@ public class Module1_Onboarding extends AppCompatActivity {
         // add custom animations for fragment change
         if (isForward) {
             transaction.setCustomAnimations(
-                    R.anim.slide_to_right,   // enter
-                    R.anim.slide_from_left,   // exit
-                    R.anim.slide_from_left,    // pop enter
-                    R.anim.slide_to_right   // pop exit
+                    R.anim.frag_slide_in,   // enter
+                    R.anim.frag_slide_out,   // exit
+                    R.anim.frag_slide_out,    // pop enter
+                    R.anim.frag_slide_in   // pop exit
             );
-        } else {
+        }else {
             transaction.setCustomAnimations(
-                    R.anim.slide_from_left,
-                    R.anim.slide_to_right,
-                    R.anim.slide_to_right,
-                    R.anim.slide_from_left
+                    R.anim.frag_slide_out_reverse,   // enter
+                    R.anim.frag_slide_in_reverse,   // exit
+                    R.anim.frag_slide_in_reverse,    // pop enter
+                    R.anim.frag_slide_out_reverse   // pop exit
             );
         }
 

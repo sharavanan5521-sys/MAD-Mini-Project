@@ -57,7 +57,7 @@ public class Module2_frag3 extends Fragment {
             playPop();
             Intent intent = new Intent(getActivity(), Module2_Quiz_Onboarding.class);
             startActivity(intent);
-            requireActivity().overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+            requireActivity().overridePendingTransition(R.anim.frag_slide_in, R.anim.frag_slide_out);
         });
 
         return view;

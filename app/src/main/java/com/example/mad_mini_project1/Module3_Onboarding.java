@@ -76,20 +76,18 @@ public class Module3_Onboarding extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (isForward) {
-            // moving forward in the module
             transaction.setCustomAnimations(
-                    R.anim.slide_from_left,   // enter
-                    R.anim.slide_to_right,    // exit
-                    R.anim.slide_to_right,    // pop enter
-                    R.anim.slide_from_left    // pop exit
+                    R.anim.frag_slide_in,   // enter
+                    R.anim.frag_slide_out,   // exit
+                    R.anim.frag_slide_out,    // pop enter
+                    R.anim.frag_slide_in   // pop exit
             );
-        } else {
-            // going back
+        }else {
             transaction.setCustomAnimations(
-                    R.anim.slide_to_right,
-                    R.anim.slide_from_left,
-                    R.anim.slide_from_left,
-                    R.anim.slide_to_right
+                    R.anim.frag_slide_out_reverse,   // enter
+                    R.anim.frag_slide_in_reverse,   // exit
+                    R.anim.frag_slide_in_reverse,    // pop enter
+                    R.anim.frag_slide_out_reverse   // pop exit
             );
         }
 

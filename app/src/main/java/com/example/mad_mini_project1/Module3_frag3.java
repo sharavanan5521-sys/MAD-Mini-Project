@@ -52,7 +52,10 @@ public class Module3_frag3 extends Fragment {
         btnQuiz.setOnClickListener(v -> {
             v.startAnimation(scaleDown);
             playPop();
-            startActivity(new Intent(getActivity(), Module3_Quiz_Onboarding.class));
+
+            Intent intent = new Intent(getActivity(), Module3_Quiz_Onboarding.class);
+            startActivity(intent);
+            requireActivity().overridePendingTransition(R.anim.frag_slide_in, R.anim.frag_slide_out);
         });
 
         return view;

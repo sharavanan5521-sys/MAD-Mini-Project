@@ -75,17 +75,17 @@ public class Module2_Onboarding extends AppCompatActivity {
         // forward = new fragment comes in from right, old one goes out to left
         if (isForward) {
             transaction.setCustomAnimations(
-                    R.anim.slide_from_left,  // enter animation
-                    R.anim.slide_to_right,   // exit animation
-                    R.anim.slide_to_right,   // pop enter
-                    R.anim.slide_from_left   // pop exit
+                    R.anim.frag_slide_in,   // enter
+                    R.anim.frag_slide_out,   // exit
+                    R.anim.frag_slide_out,    // pop enter
+                    R.anim.frag_slide_in   // pop exit
             );
-        } else {
+        }else {
             transaction.setCustomAnimations(
-                    R.anim.slide_to_right,
-                    R.anim.slide_from_left,
-                    R.anim.slide_from_left,
-                    R.anim.slide_to_right
+                    R.anim.frag_slide_out_reverse,   // enter
+                    R.anim.frag_slide_in_reverse,   // exit
+                    R.anim.frag_slide_in_reverse,    // pop enter
+                    R.anim.frag_slide_out_reverse   // pop exit
             );
         }
 

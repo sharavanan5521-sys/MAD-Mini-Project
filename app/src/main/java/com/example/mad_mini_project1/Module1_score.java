@@ -44,12 +44,12 @@ public class Module1_score extends Fragment {
         // 4. buttons
         btnMain.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), Learn.class));
-            requireActivity().overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+            requireActivity().overridePendingTransition(R.anim.frag_slide_in, R.anim.frag_slide_out);
         });
 
         btnScore.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), All_Score.class));
-            requireActivity().overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+            requireActivity().overridePendingTransition(R.anim.frag_slide_out_reverse, R.anim.frag_slide_in_reverse);
         });
 
         return view;

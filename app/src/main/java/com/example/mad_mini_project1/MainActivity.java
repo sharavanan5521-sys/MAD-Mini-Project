@@ -21,14 +21,6 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Adjust for system bars
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
-            return insets;
-        });
-
-        // Load the first onboarding fragment
         loadFragment(new frag1(), false);
     }
 
@@ -43,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
             currentFragment = 3;
         } else {
             startActivity(new Intent(this, Login.class));
-            overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
             finish();
             return;
         }
@@ -52,19 +43,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment, boolean animate) {
-        if (findViewById(R.id.fragmentContainerView) == null) return;
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        if (animate) {
-            transaction.setCustomAnimations(
-                    R.anim.slide_to_right,
-                    R.anim.slide_from_left,
-                    R.anim.slide_from_left,
-                    R.anim.slide_to_right
-            );
-        }
-
         transaction.replace(R.id.fragmentContainerView, fragment);
         transaction.commit();
     }

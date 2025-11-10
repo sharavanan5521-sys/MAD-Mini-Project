@@ -95,10 +95,10 @@ public class Module3_Quiz_Onboarding extends AppCompatActivity {
 
         if (animate) {
             transaction.setCustomAnimations(
-                    R.anim.slide_from_left,   // enter
-                    R.anim.slide_to_right,    // exit
-                    R.anim.slide_to_right,    // pop enter
-                    R.anim.slide_from_left    // pop exit
+                    R.anim.frag_slide_in,   // enter
+                    R.anim.frag_slide_out,   // exit
+                    R.anim.frag_slide_out,    // pop enter
+                    R.anim.frag_slide_in   // pop exit
             );
         }
 
